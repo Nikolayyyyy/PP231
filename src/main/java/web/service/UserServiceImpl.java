@@ -5,12 +5,12 @@ import org.springframework.stereotype.Service;
 import web.dao.UserDao;
 import web.model.User;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-    UserDao userDao;
+    private final UserDao userDao;
 
     @Autowired
     public UserServiceImpl(UserDao userDao) {

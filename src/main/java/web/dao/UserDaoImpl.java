@@ -1,6 +1,6 @@
 package web.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import web.model.User;
 
@@ -13,36 +13,31 @@ public class UserDaoImpl implements UserDao {
 
     @PersistenceContext
     private EntityManager entityManager;
-@Autowired
-    public UserDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
 
     @Override
     public void addUser(User user) {
-        entityManager.persist(user);
+        entityManager.unwrap(Session.class).saveOrUpdate(user);;
     }
 
 
     @Override
     public List<User> listUsers() {
-        List userList = entityManager.createQuery("FROM User").getResultList();
-        return userList;
+        return entityManager.unwrap(Session.class).createQuery("FROM User").getResultList();
     }
 
     @Override
     public User getUserById(int id) {
-        return entityManager.createQuery("from User where id" + id, User.class).getSingleResult();
+        return entityManager.unwrap(Session.class).createQuery("from User where id = '" + id + "'", User.class).getSingleResult();
     }
 
     @Override
     public void updateUser(User user) {
-        entityManager.merge(user);
+        entityManager.unwrap(Session.class).saveOrUpdate(user);
     }
 
     @Override
     public void removeUser(int id) {
-        User user = entityManager.find(User.class, id);
-        entityManager.remove(user);
+        User user = getUserById(id);
+        entityManager.unwrap(Session.class).delete(user);
     }
 }

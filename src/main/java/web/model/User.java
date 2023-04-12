@@ -1,13 +1,18 @@
 package web.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 @Entity
 @Table(name = "users")
 public class User {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "name")
     private String name;
@@ -19,8 +24,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String name, int age, String email) {
-        this.id = id;
+    public User(String name, int age, String email) {
         this.name = name;
         this.age = age;
         this.email = email;
