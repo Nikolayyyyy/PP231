@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping()
 public class UsersController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UsersController(UserService userService) {
@@ -32,12 +32,17 @@ public class UsersController {
 
     @GetMapping("/user-create")
     public String createUserForm(User user){
-        return "user-create";
+        return "/user-create";
     }
 
-    @PostMapping(value = "user-create")
+    @PostMapping("/user-create")
     public String createUser(User user) {
-        userService.addUser(user);
+        if (user.getId() == 0) {
+            this.userService.addUser(user);
+        } else {
+            this.userService.updateUser(user);
+        }
+//        userService.addUser(user);
         return "redirect:/users";
     }
 
@@ -46,14 +51,14 @@ public class UsersController {
         userService.removeUser(id);
         return "redirect:/users";
     }
-    @GetMapping(value = "user-update")
+    @GetMapping(value = "/user-update")
     public String updateUserForm(int id, Model model) {
         User user = userService.getById(id);
         model.addAttribute("user", user);
-        return "user-update";
+        return "/user-update";
     }
 
-    @PostMapping(value = "user-update")
+    @PostMapping(value = "/user-update")
     public String updateUser(User user){
         userService.updateUser(user);
         return "redirect:/users";
